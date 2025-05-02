@@ -1,0 +1,75 @@
+//ViewController
+
+import UIKit
+class ViewController: UIViewController {
+    @IBOutlet weak var userName: UITextField!
+    @IBOutlet weak var passWord: UITextField!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    @IBAction func loginBtn(_ sender: Any) {
+        if let username = userName.text,let password = passWord.text,!username.isEmpty,!password.isEmpty{
+                    if let mainPageVC = storyboard?.instantiateViewController(withIdentifier: "MainPageViewController") {
+                            mainPageVC.modalPresentationStyle = .fullScreen
+                            present(mainPageVC, animated: true, completion: nil)
+                        }
+                    } else {
+                        // Optional: Show alert for invalid credentials
+                        print("Please enter username and password")
+        }
+        
+    }
+}
+
+
+//MainPageViewController
+
+import UIKit
+class MainPageViewController: UIViewController {
+    @IBOutlet weak var infotxt: UILabel!
+    @IBOutlet weak var info: UIImageView!
+    var selectedBrand: String?
+    var selectedBrandImg: UIImage?
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        infotxt.text = ""
+        info.image = nil
+    }
+    @IBAction func BMWinfo(_ sender: UIButton) {
+        infotxt.text = "BMW"
+        info.image = UIImage(named: "bow")
+        selectedBrand = "BMW"
+    }
+    @IBAction func MercInfo(_ sender: UIButton) {
+        infotxt.text = "MERCEDES"
+        info.image = UIImage(named: "bimmer")
+        selectedBrand = "MERCEDES"
+    }
+    @IBAction func WagonInfo(_ sender: UIButton) {
+        infotxt.text = "VOLKSWAGEN"
+        info.image = UIImage(named: "volks")
+        selectedBrand = "VOLKSWAGEN"
+    }
+    @IBAction func browse(_ sender: Any) {
+        guard let brand = selectedBrand else {
+            let alert = UIAlertController(title: "Select a Brand", message: "Please select a brand before browsing.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+        var urlString = ""
+        switch brand {
+        case "BMW":
+            urlString = "https://www.bmw.com"
+        case "MERCEDES":
+            urlString = "https://www.mercedes-benz.com"
+        case "VOLKSWAGEN":
+            urlString = "https://www.volkswagen.com"
+        default:
+            return
+        }
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
+    }
+}
